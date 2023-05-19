@@ -46,16 +46,18 @@ object FlightsNet extends App{
 
   def isConnected(network: Map[String, Set[String]], pointA: String, pointB: String): Boolean = {
 
-    def loop(network: Map[String, Set[String]], query: List[String], marked: Set[String], pointB: String): Boolean = {
+    import scala.annotation.tailrec
+
+    @tailrec
+    def loop(query: List[String], marked: Set[String]): Boolean = {
 
       if (query.isEmpty) false
       else if (network(query.head).contains(pointB)) true
-      else loop(network,
-                query.tail ++ network(query.head).filterNot(a => (query.toSet ++ marked).contains(a)).toList,
-                marked + query.head, pointB)
+      else loop(query.tail ++ network(query.head).filterNot(a => (query.toSet ++ marked).contains(a)).toList,
+                marked + query.head)
     }
 
-    loop(network, List(pointA), Set.empty[String], pointB)
+    loop(List(pointA), Set.empty[String])
 
   }
 
